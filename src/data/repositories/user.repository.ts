@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { UserDto } from 'src/business/dtos/user.dto';
-import { UserEntity } from 'src/business/entities/user.entity';
-import { RepositoryImpl } from 'src/business/repository.abstract';
+import { UserDto } from '../../business/dtos/user.dto';
+import { UserEntity } from '../../business/entities/user.entity';
+import { RepositoryImpl } from '../../business/repository.abstract';
 import { PrismaService } from '../services/prisma.service';
 
 @Injectable()
@@ -10,37 +10,28 @@ export class UserRepository extends RepositoryImpl<UserEntity> {
       super();
   }
 
-  async create(dto: UserDto): Promise<UserEntity> {
-    try {
-      const userCreated = await this.prisma.user.create({
-        data: {
-          ...dto,
-          deletedAt: null,
-        },
-      });
-      return userCreated;
-    } catch (error) {
-      console.log(`Erro => ${error.message}`);
-      throw new Error(error);
-    }
-  }
-  async findAll(query?: string): Promise<UserEntity[]> {
-    try {
-      let whereCondition = {};
-      if (query) {
-        whereCondition = {
-          deletedAt: null,
-        };
+    async create(dto: UserDto): Promise<UserEntity> {
+      try {
+        const userCreated = await this.prisma.user.create({
+          data:dto as any
+        });
+        return userCreated;
+      } catch (error) {
+        console.log(`Erro => ${error.message}`);
+        throw new Error(error);
       }
-      const usersFound = await this.prisma.user.findMany({
-        where: whereCondition,
-      });
-      return usersFound;
-    } catch (error) {
-      console.error(`Erro => ${error.message}`);
-      throw new Error('Erro ao buscar históricos.');
     }
-  }
+    async findAll(): Promise<UserEntity[]> {
+      try {
+        const usersFound = await this.prisma.user.findMany();
+        return usersFound;
+      } catch (error) {
+        console.error(`Erro => ${error.message}`);
+        throw new Error('Erro ao buscar usuários.');
+      }
+    }
+    
+    
   async findById(id: number): Promise<UserEntity> {
     try {
       const userFound = await this.prisma.user.findUniqueOrThrow({
@@ -59,6 +50,7 @@ export class UserRepository extends RepositoryImpl<UserEntity> {
       const userUpdated = await this.prisma.user.update({
         data: {
           ...dto,
+          updatedAt: new Date()
         },
         where: {
           id: id,
@@ -72,10 +64,7 @@ export class UserRepository extends RepositoryImpl<UserEntity> {
   }
   async delete(id: number): Promise<UserEntity> {
     try {
-      const userDeleted = await this.prisma.user.update({
-        data: {
-          deletedAt: new Date(),
-        },
+      const userDeleted = await this.prisma.user.delete({
         where: {
           id: id,
         },

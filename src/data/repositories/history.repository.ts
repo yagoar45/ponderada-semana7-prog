@@ -1,6 +1,6 @@
-import { HistoryDto } from 'src/business/dtos/history.dto';
-import { HistoryEntity } from 'src/business/entities/history.entity';
-import { RepositoryImpl } from 'src/business/repository.abstract';
+import { HistoryDto } from '../../business/dtos/history.dto';
+import { HistoryEntity } from '../../business/entities/history.entity';
+import { RepositoryImpl } from '../../business/repository.abstract';
 import { PrismaService } from '../services/prisma.service';
 import { Injectable } from '@nestjs/common';
 

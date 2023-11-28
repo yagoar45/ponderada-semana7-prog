@@ -1,6 +1,6 @@
-import { HistoryDto } from "src/business/dtos/history.dto";
-import { HistoryEntity } from "src/business/entities/history.entity";
-import { HistoryServiceImpl } from "src/business/services/history.service.abstract";
+import { HistoryDto } from "../../business/dtos/history.dto";
+import { HistoryEntity } from "../../business/entities/history.entity";
+import { HistoryServiceImpl } from "../../business/services/history.service.abstract";
 import { HistoryRepository } from "../repositories/history.repository";
 
 export class HistoryService extends HistoryServiceImpl{

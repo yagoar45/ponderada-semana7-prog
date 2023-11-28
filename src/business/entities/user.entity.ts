@@ -30,6 +30,4 @@ export class UserEntity implements User {
   @IsDate()
   updatedAt: Date;
 
-  @IsDate()
-  deletedAt: Date;
 }
