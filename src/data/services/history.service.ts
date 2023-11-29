@@ -1,8 +1,10 @@
+import { Injectable } from "@nestjs/common";
 import { HistoryDto } from "../../business/dtos/history.dto";
 import { HistoryEntity } from "../../business/entities/history.entity";
 import { HistoryServiceImpl } from "../../business/services/history.service.abstract";
 import { HistoryRepository } from "../repositories/history.repository";
 
+@Injectable()
 export class HistoryService extends HistoryServiceImpl{
     constructor(private readonly repository: HistoryRepository){
         super();

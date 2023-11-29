@@ -15,8 +15,12 @@ export class HistoryRepository extends RepositoryImpl<HistoryEntity> {
       const historyCreated = await this.prisma.history.create({
         data: {
           ...dto,
-          userId: extraId,
-        },
+          user: {
+            connect: {
+              id: extraId
+            }
+          }
+         },
       });
       return historyCreated;
     } catch (error) {

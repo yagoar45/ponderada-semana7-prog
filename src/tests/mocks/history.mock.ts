@@ -50,6 +50,6 @@ export function createMockHistoryEntity(dto: HistoryDto): HistoryEntity {
     id: 1,
     ...dto,
     userId: 2,
-    createdAt: new Date(),
+    createdAt: new Date("2023-11-29T00:26:47.094Z"),
   };
 }

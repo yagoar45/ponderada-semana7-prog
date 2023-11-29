@@ -60,7 +60,11 @@ describe('HistoryRepository', () => {
       expect(prismaService.history.create).toHaveBeenCalledWith({
         data: {
           ...historyDto,
-          userId: extraId,
+          user: {
+            connect: {
+              id: extraId,
+            }
+          }
         },
       });
     });

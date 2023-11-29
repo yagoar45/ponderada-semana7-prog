@@ -11,7 +11,7 @@ import {
 import { HistoryDto } from '../../business/dtos/history.dto';
 import { HistoryService } from '../../data/services/history.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { OpenAiIntegration } from 'src/integration/openai.integration';
+import { OpenAiIntegration } from '../../integration/openai.integration';
 
 @ApiTags('histories')
 @Controller()
@@ -29,8 +29,8 @@ export class HistoryController {
   @Post('/history/:id')
   async createHistoryForUser(@Param('id', new ParseIntPipe()) id: number) {
     const { title, description, category } = await this.gptIntegraton.createHistoryDetails();
-    const dto = { title, description, category };
-    console.log(title, description, category);
+    const titleReplaced = title.replace("Title:", "");
+    const dto = { title:titleReplaced, description, category };
     return await this.historyService.createHistoryForUser(dto, id);
   }
 
