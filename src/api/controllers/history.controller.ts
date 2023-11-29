@@ -7,7 +7,6 @@ import {
   Get,
   Body,
   ParseIntPipe,
-  UseGuards,
 } from '@nestjs/common';
 import { HistoryDto } from '../../business/dtos/history.dto';
 import { HistoryService } from '../../data/services/history.service';
