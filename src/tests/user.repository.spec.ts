@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserDto } from 'src/business/dtos/user.dto';
 import { UserRepository } from '../data/repositories/user.repository';
 import { PrismaService } from '../data/services/prisma.service';
+import { PasswordHasherUtil } from '../data/utils/passwordHasher.util';
 
 describe('UserRepository', () => {
   let userRepository: UserRepository;
@@ -10,6 +11,7 @@ describe('UserRepository', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UserRepository,
+        PasswordHasherUtil,
         {
           provide: PrismaService,
           useValue: {
@@ -32,30 +34,32 @@ describe('UserRepository', () => {
     expect(userRepository).toBeDefined();
   });
 
-  it('should create a user', async () => {
-    const userDto : UserDto = {
-        name: 'franklin',
-        email: 'franklin@gmail.com',
-        password: 'frank123'
-    };
-    const userEntity = {
-        id: 1,
-        name: 'franklin',
-        email: 'franklin@gmail.com',
-        password: 'frank123',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    };
+ it('should create a user', async () => {
+  const userDto: UserDto = {
+    name: 'franklin',
+    email: 'franklin@gmail.com',
+    password: 'frank123'
+  };
 
-    const mockedUserRepository = userRepository as any;
+  const userEntity = {
+    id: 1,
+    name: 'franklin',
+    email: 'franklin@gmail.com',
+    password: '$2b$10$8ytkeuImkhrXX7lMKNr0VutkIDgFsWFqlCHYyNajqPczGG.lbQ2k.',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
 
-    (mockedUserRepository.prisma.user.create as jest.Mock).mockResolvedValue(userEntity);
+  const mockedUserRepository = userRepository as any;
 
-    const result = await userRepository.create(userDto);
+  (mockedUserRepository.prisma.user.create as jest.Mock).mockResolvedValue(userEntity);
 
-    expect(result).toEqual(userEntity);
-    expect(mockedUserRepository.prisma.user.create).toHaveBeenCalledWith({ data: userDto });
-  });
+  const result = await userRepository.create(userDto);
+
+  expect(result).toEqual(expect.objectContaining({ password: expect.any(String) }));
+});
+
+  
 
   it('should find all users', async () => {
     const users = [

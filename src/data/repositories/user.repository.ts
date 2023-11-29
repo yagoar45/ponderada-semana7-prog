@@ -3,17 +3,22 @@ import { UserDto } from '../../business/dtos/user.dto';
 import { UserEntity } from '../../business/entities/user.entity';
 import { RepositoryImpl } from '../../business/repository.abstract';
 import { PrismaService } from '../services/prisma.service';
+import { PasswordHasherUtil } from '../utils/passwordHasher.util';
 
 @Injectable()
 export class UserRepository extends RepositoryImpl<UserEntity> {
-  constructor(private readonly prisma: PrismaService) {
+  constructor(private readonly prisma: PrismaService, private readonly passwordHasher: PasswordHasherUtil) {
       super();
   }
 
     async create(dto: UserDto): Promise<UserEntity> {
+      const passwordHashed = await this.passwordHasher.hashPassword(dto.password);
       try {
         const userCreated = await this.prisma.user.create({
-          data:dto as any
+          data:{
+            ... dto as any,
+            password: passwordHashed
+          }
         });
         return userCreated;
       } catch (error) {

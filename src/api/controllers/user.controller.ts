@@ -2,17 +2,20 @@ import { Controller, Post, Param, Put, Delete, Get, Body, ParseIntPipe } from "@
 import { UserDto } from "../../business/dtos/user.dto";
 import { UserService } from "../../data/services/user.service";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { AuthService } from "../auth/auth.service";
 
 @ApiTags('users')
 @Controller()
 export class UserController {
-    constructor(private readonly userService: UserService){}
+    constructor(private readonly userService: UserService, private readonly authService: AuthService){}
 
     @ApiOperation({ summary: 'Create a new user' })
   @ApiResponse({ status: 201, description: 'The user has been successfully created' })
     @Post('/user')
     async createUser(@Body() dto: UserDto){
-        return await this.userService.createUser(dto);
+        const userCreated =  await this.userService.createUser(dto);
+        const token = this.authService.generateToken(userCreated.id); 
+        return {user: userCreated, token};
     }
 
     @ApiOperation({ summary: 'Get all users' })

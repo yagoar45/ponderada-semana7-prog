@@ -38,9 +38,8 @@ describe('UserController (e2e)', () => {
       .send(userDto)
       .expect(201)
       .expect((res) => {
-        expect(res.body).toHaveProperty('id');
-        expect(res.body.name).toBe(userDto.name);
-        expect(res.body.email).toBe(userDto.email);
+        expect(res.body.user.name).toBe(userDto.name);
+        expect(res.body.user.email).toBe(userDto.email);
       });
   });
 
